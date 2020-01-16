@@ -5,23 +5,23 @@ const db = require("./userDb.js")
 const router = express.Router();
 
 router.post('/', validateUser, async (req, res) => {
-  try {
+  try{
     const newUser = await db.insert(req.body)
     res.status(201).json(newUser)
   }
   catch{
-    res.status(500).json({ error: "ERROR" })
+    res.status(500).json({ error: "ERROR"})
   }
 });
 
-router.post('/:id/posts', validateUserId, validatePost, async (req, res) => {
-  const newPost = { ...req.body, user_id: req.params.id }
-  try {
+router.post('/:id/posts', validatePost, async (req, res) => {
+  const newPost = { ...req.body, user_id: req.params.id}
+  try{
     const success = await postDb.insert(newPost)
     res.status(201).json(success)
   }
   catch{
-    res.status(500).json({ error: "ERROR" })
+    res.status(500).json({ error: "ERROR"})
   }
 });
 
@@ -31,28 +31,28 @@ router.get('/', async (req, res) => {
     res.status(200).json(users)
   }
   catch{
-    res.status(500).json({ error: "error" })
+    res.status(500).json({ error: "error"})
   }
 
 });
 
 router.get('/:id', validateUserId, async (req, res) => {
-  try {
+  try{
     const user = await db.getById(req.params.id)
     res.status(200).json(user)
   }
   catch{
-    res.status(500).json({ error: "500 Error" })
+    res.status(500).json({ error: "500 Error"})
   }
 });
 
 router.get('/:id/posts', validateUserId, async (req, res) => {
-  try {
+  try{
     const posts = await db.getUserPosts(req.params.id)
     res.status(200).json(posts)
   }
   catch{
-    res.status(500).json({ error: "500 Error" })
+    res.status(500).json({ error: "500 Error"})
   }
 });
 
@@ -60,10 +60,10 @@ router.delete('/:id', validateUserId, async (req, res) => {
   // do your magic!
   try {
     const result = await db.remove(req.params.id)
-    res.status(200).json({ status: `User Id: ${result} has been successfully deleted` })
+    res.status(200).json({ status: `User Id: ${result} has been successfully deleted`})
   }
   catch {
-    res.status(500).json({ error: "500 Error" })
+    res.status(500).json({ error: "500 Error"})
   }
 });
 
@@ -75,7 +75,7 @@ router.put('/:id', validateUserId, validateUser, async (req, res) => {
     res.status(200).json(newResult)
   }
   catch {
-    res.status(500).json({ error: "500 Error" })
+    res.status(500).json({ error: "500 Error"})
   }
 });
 
@@ -83,16 +83,16 @@ router.put('/:id', validateUserId, validateUser, async (req, res) => {
 
 async function validatePostId(req, res, next) {
   const post = await db.getById(req.params.id)
-  if (post) {
+  if (post){
     next()
   } else {
-    res.status(400).json({ message: "not found" })
+    res.status(400).json({ message: "not found"})
   }
-}
+  }
 
 async function validateUserId(req, res, next) {
   const user = await db.getById(req.params.id)
-  if (user) {
+  if (user){
     next()
   } else {
     res.status(400).json({ message: "invalid user id" })
@@ -101,7 +101,7 @@ async function validateUserId(req, res, next) {
 
 function validatePost(req, res, next) {
 
-  if (!req.body) {
+  if (!req.body){
     res.status(400).json({ message: "missing post data" })
   } else if (!req.body.text) {
     res.status(400).json({ message: "missing required TEXT field" })
@@ -111,7 +111,7 @@ function validatePost(req, res, next) {
 }
 
 function validateUser(req, res, next) {
-  if (!req.body) {
+  if (!req.body){
     res.status(400).json({ message: "missing user data" })
   } else if (!req.body.name) {
     res.status(400).json({ message: "missing required NAME field" })
